@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NixFence by Byte2craft — Linux host security, simplified. A community technical preview for firewall and SELinux policy management." />
+  <title>NixFence | Linux Security Made Manageable | Byte2craft</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo-wrap">
+      <div class="brand-emblem" aria-hidden="true"><span>⌁</span></div>
+      <div>
+        <div class="brand-title">Nix<span>Fence</span><sup>α</sup></div>
+        <a href="https://byte2craft.com" target="_blank" rel="noopener noreferrer" class="brand-by">BY BYTE2CRAFT ↗</a>
+      </div>
+    </div>
+    <div class="nav-label">SECURITY WORKSPACE</div>
+    <nav aria-label="Primary navigation">
+      <button class="nav-item active" data-panel="overview"><span class="nav-icon">◫</span> Overview</button>
+      <button class="nav-item" data-panel="hosts"><span class="nav-icon">▤</span> Linux Hosts <span class="nav-count">4</span></button>
+      <button class="nav-item" data-panel="policies"><span class="nav-icon">⋈</span> Firewall Policies</button>
+      <button class="nav-item" data-panel="selinux"><span class="nav-icon">⬡</span> SELinux</button>
+      <button class="nav-item" data-panel="playground"><span class="nav-icon">⌘</span> Policy Playground</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="notice-mini"><span class="status-dot"></span> COMMUNITY ALPHA · DEMO</div>
+      <p>Built for engineers.<br/>Crafted by <strong>Byte2craft</strong>.</p>
+      <a href="https://byte2craft.com" target="_blank" rel="noopener noreferrer">byte2craft.com ↗</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="breadcrumb">Byte2craft <span>/</span> NixFence <span>/</span> <b id="breadcrumb-current">Overview</b></div>
+      <div class="top-actions"><span class="preview-flag">READ-ONLY TECH PREVIEW</span><a class="top-link" href="https://byte2craft.com" target="_blank" rel="noopener noreferrer">Visit Byte2craft ↗</a></div>
+    </div>
+    <div class="demo-alert"><span>ⓘ</span><div><strong>Safe demo environment.</strong> All hosts and metrics are synthetic. No SSH connections, policy deployment or remote commands are enabled in this preview. Do not expose this prototype on a public network.</div></div>
+
+    <section class="panel active" id="panel-overview">
+      <div class="heading-row">
+        <div><div class="eyebrow">YOUR LINUX SECURITY CONTROL PLANE</div><h1>Security, without the <span>shell marathon.</span></h1><p>Bring host firewall policies and SELinux posture into one focused workspace.</p></div>
+        <button class="button accent" data-navigate="playground">Explore the policy engine <span>↗</span></button>
+      </div>
+      <div class="stats">
+        <article class="stat"><span>Demo hosts</span><strong id="summary-hosts">—</strong><small>Illustrative fleet</small></article>
+        <article class="stat"><span>Policy sets</span><strong id="summary-policies">—</strong><small>Sample policies</small></article>
+        <article class="stat"><span>SELinux enforcing</span><strong id="summary-enforcing">—</strong><small>Example states only</small></article>
+        <article class="stat"><span>Remote commands executed</span><strong>0</strong><small>Strictly read-only preview</small></article>
+      </div>
+      <div class="split-grid">
+        <article class="card">
+          <div class="card-header"><div><h2>Linux fleet <span class="muted-title">/ Demo</span></h2><p>A clear view across your hosts.</p></div><button class="text-button" data-navigate="hosts">All hosts →</button></div>
+          <div id="overview-hosts"></div>
+        </article>
+        <article class="card impact-card">
+          <div class="card-header"><div><h2>Built around safe changes</h2><p>Designed for real infrastructure teams.</p></div></div>
+          <div class="check-row"><span class="check-icon">✓</span><div><b>Agentless by design</b><small>Future SSH/Ansible adapters without agents on each host.</small></div></div>
+          <div class="check-row"><span class="check-icon">✓</span><div><b>Policy-first workflow</b><small>Typed policies, validation and human-readable diffs.</small></div></div>
+          <div class="check-row"><span class="check-icon">✓</span><div><b>Safety isn't a paid add-on</b><small>Canary deployment and verified rollback are part of the Community roadmap.</small></div></div>
+          <div class="impact-bottom"><span class="dotlight"></span> Open source first. Safe infrastructure changes by design.</div>
+        </article>
+      </div>
+      <div class="bottom-cta"><div><strong>Open source by Byte2craft</strong><p>Self-host it. Understand it. Extend it. Build your own workflow.</p></div><a href="https://byte2craft.com" target="_blank" rel="noopener noreferrer">About Byte2craft <span>↗</span></a></div>
+    </section>
+
+    <section class="panel" id="panel-hosts">
+      <div class="page-header"><div class="eyebrow">INVENTORY / DEMO</div><h1>Linux Hosts</h1><p>A single view of Linux firewall and SELinux configuration states.</p></div>
+      <article class="card"><div class="card-header"><h2>Managed fleet <span class="muted-title">(sample data)</span></h2><span class="tiny-tag">No SSH connections</span></div><div class="table-scroll"><table><thead><tr><th>HOSTNAME</th><th>IP ADDRESS</th><th>GROUP</th><th>OS</th><th>FIREWALL</th><th>SELINUX</th></tr></thead><tbody id="hosts-body"></tbody></table></div></article>
+      <div class="tip-box"><strong>Next development milestone:</strong> Host enrollment, pinned SSH host keys and read-only discovery are planned, not yet implemented.</div>
+    </section>
+
+    <section class="panel" id="panel-policies">
+      <div class="page-header"><div class="eyebrow">HOST FIREWALL / DEMO</div><h1>Firewall Policies</h1><p>One model for human-friendly Linux host firewall rules.</p></div>
+      <article class="card"><div class="card-header"><h2>Policy sets <span class="muted-title">(sample data)</span></h2><button class="button ghost small" data-navigate="playground">Validate a policy →</button></div><div class="table-scroll"><table><thead><tr><th>NAME</th><th>TARGET GROUP</th><th>RULES</th><th>REVISION</th><th>STATUS</th></tr></thead><tbody id="policies-body"></tbody></table></div></article>
+      <div class="tip-box">Firewall policy apply, compiler adapters and remote execution are intentionally absent until SSH-safe rollback is tested in VMs.</div>
+    </section>
+
+    <section class="panel" id="panel-selinux">
+      <div class="page-header"><div class="eyebrow">MANDATORY ACCESS CONTROL / DEMO</div><h1>SELinux Posture</h1><p>Make SELinux status visible before changing anything.</p></div>
+      <div class="split-grid"><article class="card"><div class="card-header"><h2>Enforcement overview</h2><span class="tiny-tag">Demo</span></div><div id="selinux-hosts"></div></article><article class="card"><div class="card-header"><h2>Planned Community controls</h2></div><div class="feature-item"><span>01</span><div><b>Mode visibility</b><p>Enforcing, permissive or disabled.</p></div></div><div class="feature-item"><span>02</span><div><b>SELinux booleans</b><p>Review and manage allowlisted boolean settings.</p></div></div><div class="feature-item"><span>03</span><div><b>Port and file contexts</b><p>Planned policy model after early releases.</p></div></div><div class="tip-inline">No changes are made by this preview.</div></article></div>
+    </section>
+
+    <section class="panel" id="panel-playground">
+      <div class="page-header"><div class="eyebrow">COMMUNITY ENGINE / WORKING DEMO</div><h1>Policy Playground</h1><p>Paste a JSON firewall policy. Get deterministic schema checks and safety warnings — locally, without contacting your servers.</p></div>
+      <div class="playground-grid"><article class="card"><div class="card-header"><h2>Policy JSON</h2><button id="reset-policy" class="text-button">Reset example</button></div><label class="sr-only" for="policy-json">Firewall policy JSON</label><textarea id="policy-json" spellcheck="false"></textarea><button id="analyze-button" class="button accent fill">Analyze policy <span>↗</span></button></article><article class="card"><div class="card-header"><h2>Analysis results</h2><span class="tiny-tag">OFFLINE ONLY</span></div><div id="analysis-results" class="analysis-placeholder">Run analysis to see validation results, rule ordering and actionable findings.</div></article></div>
+      <div class="tip-box">This parser is an early safety validator, not proof a policy is safe to apply. It does not perform reachability checks or deploy to remote hosts.</div>
+    </section>
+
+    <footer class="footer"><span>NixFence Community Alpha · A project by <strong>Byte2craft</strong></span><a href="https://byte2craft.com" target="_blank" rel="noopener noreferrer">byte2craft.com ↗</a></footer>
+  </main>
+</div>
+<script src="/static/app.js" defer></script>
+</body>
+</html>

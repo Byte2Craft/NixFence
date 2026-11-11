@@ -1,0 +1,10 @@
+{
+  "name": "web-prod-baseline",
+  "default_input_action": "DROP",
+  "management_sources": ["10.10.0.0/16"],
+  "rules": [
+    {"id": "MGMT-SSH", "priority": 10, "source": "10.10.0.0/16", "protocol": "tcp", "destination_port": 22, "action": "ACCEPT", "description": "SSH from management network"},
+    {"id": "WEB-HTTPS", "priority": 20, "source": "10.20.0.0/16", "protocol": "tcp", "destination_port": 443, "action": "ACCEPT", "description": "Internal HTTPS"},
+    {"id": "DB-DENY", "priority": 30, "source": "0.0.0.0/0", "protocol": "tcp", "destination_port": 3306, "action": "DROP", "description": "Deny inbound MySQL"}
+  ]
+}

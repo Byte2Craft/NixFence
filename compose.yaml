@@ -1,0 +1,25 @@
+services:
+  nixfence:
+    build: .
+    image: nixfence-community:0.1.0a0
+    container_name: nixfence-demo
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      NIXFENCE_WEB_DIR: /app/web
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=2)"]
+      interval: 20s
+      timeout: 4s
+      retries: 3
+      start_period: 10s
