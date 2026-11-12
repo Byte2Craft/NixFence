@@ -1,32 +1,7 @@
-# NixFence Community roadmap
+# NixFence Community Roadmap
 
-This roadmap is a proposed engineering direction, **not a promise of production readiness or delivery dates**. The public repository contains the open-source Community edition only.
+- **Current 0.2 beta:** verified SSH, real firewalld port operations, runtime SELinux boolean operations, local auth and timed host rollback.
+- **Next community beta:** dedicated constrained host privilege helper, integration tests on Rocky/Alma/RHEL 9, verified SSH-loss rollback, richer firewall intent and idempotence, durable revision history and explicit backup/restore.
+- **Community 1.0:** stable distro/backend support matrix, tested persistent SELinux boolean rollback, policy diff and canary batches, multi-admin authorization, security review and reliable upgrades.
 
-## M0 — Current technical alpha
-
-- Local, Byte2craft-branded web demo backed by synthetic inventory.
-- Typed JSON firewall-policy model with preliminary offline warnings.
-- OpenAPI endpoint, example policy, automated tests and Docker Compose.
-- Demo binds to `127.0.0.1` and has no authentication; never expose publicly.
-
-## M1 — Verified read-only discovery
-
-- Safe SSH onboarding with pinned host identities and explicit authorization.
-- Supported Rocky Linux, AlmaLinux and RHEL version matrix.
-- Read-only firewalld/SELinux state detection.
-- User authentication and secure secret-handling before remote discovery is enabled.
-
-## M2 — Safe host policy management
-
-- One explicitly supported firewall adapter, typed editor and exact diff.
-- Immutable desired revisions with canary rollout.
-- Independent host-side rollback validated by fault-injection tests.
-- SELinux booleans and modes with strict platform capability checks.
-
-## M3 — Stable Community release
-
-- Published compatibility matrix, upgrade path and backup/restore tests.
-- Auditable basic changes, portable policy export and manual drift comparison.
-- API documentation, accessibility and security review.
-
-Contributions are welcome. Features are not considered shipped until implemented, documented and tested.
+Pro/Enterprise commercial modules are not part of this open-source repository. Essential safety controls and export rights must remain available to Community users.

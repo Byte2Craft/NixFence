@@ -1,8 +1,0 @@
-{
-  "note": "Illustrative inventory only. 192.0.2.0/24 and 198.51.100.0/24 are documentation address ranges.",
-  "hosts": [
-    {"hostname": "web-prod-01", "address": "192.0.2.11", "group": "WEB-PROD"},
-    {"hostname": "web-prod-02", "address": "192.0.2.12", "group": "WEB-PROD"},
-    {"hostname": "app-prod-01", "address": "192.0.2.31", "group": "APP-PROD"}
-  ]
-}

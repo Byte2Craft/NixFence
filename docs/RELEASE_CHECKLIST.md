@@ -1,25 +1,15 @@
-# Community release checklist
+# Community beta release checklist
 
-## Before a public release
-
-- [ ] Tests and lint checks pass in CI.
-- [ ] Docker image builds successfully and the demo starts on a clean machine.
-- [ ] The demo is confirmed local-only and unauthenticated; its warnings remain visible.
-- [ ] Check for credentials, private inventory, user identifiers or production screenshots.
-- [ ] Review OSS dependencies, license notices and container vulnerabilities.
-- [ ] Ensure all README, API, screenshot and release claims match implemented features.
-- [ ] Keep Apache-2.0 LICENSE, NOTICE, trademarks and contributor documentation consistent.
-- [ ] Provide a private method to report vulnerabilities, if configured.
-
-## Before implementing remote discovery
-
-- [ ] Implement authentication and authorization.
-- [ ] Pin SSH host identities and isolate SSH credentials.
-- [ ] Verify allowed read-only commands and no unintended writes.
-
-## Before implementing live changes
-
-- [ ] Validate restore after SSH loss, network failure and host reboot.
-- [ ] Detect firewall ownership conflicts and unsupported host combinations.
-- [ ] Log per-host outcomes and immutable policy revisions.
-- [ ] Verify canary rollout and explicit approval gates.
+- [ ] All tests and static analysis pass in a clean environment; Docker build passes.
+- [ ] Verify no code or configuration credentials have been committed to Git.
+- [ ] Verify administrator password and SSH private key are readable only by the intended runtime identity.
+- [ ] Verify pinned SSH identity and reject unknown/changed host keys on a supported VM.
+- [ ] Run real firewalld port staging and confirmation tests on Rocky, Alma and RHEL 9 VMs.
+- [ ] Validate independent host-side rollback after SSH disconnect and controller crash.
+- [ ] Verify port rollback restores BOTH runtime and permanent pre-change states.
+- [ ] Verify SELinux boolean runtime rollback and document lack of persistence.
+- [ ] Review sudo privilege escalation risk and container permissions.
+- [ ] Check dependency vulnerabilities, licensing and architecture support.
+- [ ] Deploy only to local trusted networks; maintain a console recovery plan.
+- [ ] Ensure README and Docker Hub description say **Community beta, not production-ready**.
+- [ ] Never publish tag `latest` before production release criteria are met.

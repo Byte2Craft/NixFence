@@ -1,20 +1,29 @@
-# Release status — v0.1.0-alpha.0
+# NixFence Community v0.2.0-beta.1 — Verified implementation status
 
-**Technical preview. Not for production.**
+This is **real host operations code**, not a simulated demo. It has not yet passed real Rocky/Alma/RHEL VM failure-injection tests or an independent security review and is therefore **not production-ready**.
 
-## Included
+## Implemented
 
-- Local web console with visible Byte2craft project attribution.
-- Synthetic host inventory, example policy sets and example SELinux posture.
-- Typed JSON policy validation and a preliminary offline analyzer.
-- Local-only FastAPI endpoints and OpenAPI documentation.
-- Docker Compose demo configuration and automated tests.
+- Single administrator, session cookie, CSRF token and login rate limiting.
+- Real SSH connections using OpenSSH `StrictHostKeyChecking=yes` and a pinned known_hosts file.
+- Enrollment fails unless the host can be inspected (only Rocky/Alma/RHEL 9 with active firewalld).
+- Real firewalld zone and port inspection.
+- Real port add/remove to the runtime ruleset; confirmation commits one port to permanent rules.
+- Real SELinux boolean read/list, runtime toggling and confirmation (runtime-only).
+- Before any change: schedule a host-side independent rollback using systemd-run and verify active timer.
+- Manual revert and inspection; late/failed changes are marked `needs_review`, never assumed recovered.
+- Durable SQLite host inventory, operations and audit metadata.
+- Offline JSON policy analyzer retained (not wired to live apply).
 
-## Not included
+## Not yet provided
 
-- SSH host enrollment or discovery; live firewall or SELinux reads/writes.
-- Authentication, user roles, database persistence or revision history.
-- Live deployment, canary rollout, independent host-side rollback or audit trails.
-- Scheduled audits, security alerts, compliance reporting and paid editions.
+- A tightly scoped on-host sudo helper or audited least-privilege sudo policy.
+- Firewall rich-rule / zone reconfiguration, nftables adapters, bulk deployments or host groups.
+- SELinux persistent boolean modification (runtime-only intentionally).
+- Multi-user RBAC/SSO, approvals, full audit tamper-evidence, credential rotation UI.
+- High availability, migrations, incremental backups, cross-platform target support.
+- Automated host VM/SSH-loss rollback verification and full integration tests.
 
-The policy checker uses early heuristics. A clean result is **not proof** that any policy is safe for production deployment. Do not expose the demo on a public interface.
+## Safety claim limitation
+
+The systemd-run timer is designed to run even after SSH drops. This property still needs to be tested on supported real VMs. It cannot protect against a stopped systemd manager, OS crash, firewalld daemon failure, policy conflicts or malicious host administrators. Never disable host key verification or publish the unaudited control plane on an internet-facing port.

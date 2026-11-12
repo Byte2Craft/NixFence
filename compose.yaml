@@ -1,25 +1,36 @@
 services:
   nixfence:
-    build: .
-    image: nixfence-community:0.1.0a0
-    container_name: nixfence-demo
+    image: byte2craft/nixfence-community:0.2.0-beta.1
+    container_name: nixfence-community
     restart: unless-stopped
     ports:
       - "127.0.0.1:8080:8080"
+    volumes:
+      - nixfence_data:/data
+      - ./secrets:/run/nixfence-secrets:ro
     environment:
+      NIXFENCE_DB: /data/nixfence.sqlite3
+      NIXFENCE_ADMIN_USER: admin
+      NIXFENCE_ADMIN_PASSWORD_FILE: /run/nixfence-secrets/admin_password
+      NIXFENCE_SSH_KEY_FILE: /run/nixfence-secrets/id_ed25519
+      NIXFENCE_KNOWN_HOSTS: /run/nixfence-secrets/known_hosts
       NIXFENCE_WEB_DIR: /app/web
+      NIXFENCE_ALLOWED_ORIGIN: http://127.0.0.1:8080
+      NIXFENCE_COOKIE_SECURE: "false"
     read_only: true
     tmpfs:
-      - /tmp:rw,nosuid,nodev,size=16m
+      - /tmp:rw,nosuid,nodev,noexec,size=32m
     cap_drop:
       - ALL
     security_opt:
       - no-new-privileges:true
     pids_limit: 128
-    mem_limit: 256m
+    mem_limit: 512m
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=2)"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=3)"]
       interval: 20s
-      timeout: 4s
-      retries: 3
-      start_period: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 15s
+volumes:
+  nixfence_data:

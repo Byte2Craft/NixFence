@@ -6,7 +6,7 @@
 
 ## Safety / backwards compatibility
 
-## Screenshots (synthetic data only, if UI change)
+## Screenshots (redacted; never include real host details)
 
 - [ ] No credentials or production infrastructure data
 - [ ] No third-party benchmark content without explicit rights

@@ -1,59 +1,32 @@
-# NixFence Community architecture
-
-NixFence uses a small modular application for the developer preview. The present source tree consists of a browser UI, read-only synthetic API and JSON policy analyzer. **There is no remote execution or database in this release.**
-
-## Current implementation
+# Community architecture
 
 ```text
-Browser (local-only) -> FastAPI -> static synthetic host/policy fixtures
-                                  -> Pydantic policy schema + offline analyzer
+Browser (loopback-only) -> FastAPI (cookie auth + CSRF)
+                         |    |    |
+                         |    |    +--> SQLite (persisted named volume)
+                         |    +-------> Offline policy analysis
+                         +------------> OpenSSH (strict pinned host keys)
+                                         |
+                                         v
+                                Rocky / Alma / RHEL 9
+                                sudo firewalld / SELinux
+                                systemd-run rollback timer
 ```
 
-The Docker Compose service binds to the host's `127.0.0.1:8080`. The container is non-root and read-only. The API has no authentication and must remain inaccessible to untrusted networks.
+The SSH backend has **no arbitrary command execution endpoint**. Host management is limited to inspected firewalld ports and SELinux runtime booleans. Remote execution nevertheless relies on a privileged SSH user and broadly capable sudo commands, which must be tightened using a dedicated host-side helper in a later release.
 
-## Target Community architecture (not yet implemented)
+## Staged firewalld operation
 
-```text
-Browser + CLI
-    |
-Authenticated versioned REST API
-    |
-Inventory | Policy model | Validation | Revision history | Audit
-    |                              |
-Observed state                 Desired state
-    |                              |
-    +--- Isolated execution worker / Ansible Runner
-                    |
-             Verified SSH
-                    |
-  Linux hosts: firewalld or nftables, SELinux
-   (no per-server web administration agent)
-```
+1. Verify remote host identity, OS family, active firewalld, zone and both runtime/permanent port states.
+2. Atomically reserve the host for one change.
+3. Place a root-readable-only rollback script in `/run/nixfence`, and schedule a transient systemd timer.
+4. Confirm the timer is `active`. Only then apply the requested runtime port change.
+5. Verify runtime state and ask the administrator to confirm or revert.
+6. On confirmation, verify timer again; apply the permanent port rule; verify runtime/permanent and cancel the timer.
+7. If the SSH session is lost, the host timer attempts to restore original runtime and permanent port states. The control plane marks expired operations `needs_review`, not `reverted`.
 
-### Design contracts
+No `firewall-cmd --reload` is used; this avoids resetting unrelated transient firewalld rules.
 
-- Frontend policy edits must never be translated directly into shell commands.
-- Host-target selection is different from packet source/destination matching.
-- Backend adapters must reject unsupported semantics, not silently approximate them.
-- Actual observed state must be tracked separately from approved desired state.
-- Start with a single supported backend; detect other firewall owners before any changes.
-- Require explicit intent and authorization for every write operation.
-- Avoid a mandatory vendor cloud, online license server or Kubernetes cluster for Community.
-- A rollback timer must be independent of the management API and tested with complete SSH loss.
-- Every proposed change must show its diff, scope, verification status and recovery path.
+## SELinux booleans
 
-## Example future adapter protocol
-
-```python
-from typing import Protocol
-
-class FirewallAdapter(Protocol):
-    def discover(self, host): ...
-    def validate(self, policy): ...
-    def render(self, policy): ...
-    def stage(self, host, rendered): ...
-    def verify(self, host, expected): ...
-    def rollback(self, host, staged): ...
-```
-
-These are **design sketches**, not executable adapters in this alpha.
+Real `getsebool` reads, runtime-only `setsebool` updates. Confirmation cancels the rollback timer but does not call `setsebool -P`. Persistent SELinux changes and restoration of policy-specific overrides require additional test coverage.

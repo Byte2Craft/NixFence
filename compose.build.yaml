@@ -1,0 +1,5 @@
+# Build locally before the first official Docker Hub tag exists.
+services:
+  nixfence:
+    build: .
+    image: nixfence-community:0.2.0-beta.1-local

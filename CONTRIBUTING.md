@@ -1,19 +1,12 @@
-# Contributing to NixFence
+# Contributing to NixFence Community
 
-Thanks for supporting **NixFence by Byte2craft**. We want a practical security tool that engineers can understand and improve.
+Thank you for supporting this Byte2craft open-source project. Use English for code comments, issues, documentation and pull requests.
 
-## Starting a contribution
+1. Open an issue describing the engineering problem and intended safety behavior.
+2. For every SSH or host-operation change, provide tests for the *unsafe* and failure paths, not only success cases.
+3. Keep all target user input schema-validated. Do not add generic remote shell endpoints.
+4. Run `python -m pip install -e '.[dev]'`, `ruff check src tests` and `pytest -q`.
+5. Verify host changes in a disposable VM with console access. Clearly distinguish local mocking from real-host evidence.
+6. Submit a reviewable PR with a threat/safety impact summary.
 
-Please use **English** for issues, pull requests, code comments and documentation.
-
-1. Open an Issue outlining the problem and intended behavior.
-2. For policy engine changes, include test cases for malformed inputs and risky firewall situations.
-3. Keep security-sensitive code small and reviewable. No generic remote shell APIs.
-4. Install `pip install -e '.[dev]'`, then run `pytest -q` and `ruff check src tests`.
-5. Submit a PR with a concise explanation, test evidence and security implications.
-
-Do not submit benchmark content copied from CIS or another third party without confirmed redistribution rights. Do not include customer infrastructure data, SSH keys or screenshots containing secrets.
-
-By contributing, you agree that your submission is your own or you have the right to license it under Apache-2.0. We currently do not require a CLA. If a dual-license strategy is pursued later, the contribution policy will be explicitly reviewed and communicated first; no retroactive relicense rights are assumed.
-
-Community decisions should be transparent. We welcome changes that add CLI, import/export, safe policy modeling, tests, accessibility and distro adapters.
+No actual host credentials, proprietary enterprise components, commercial marketing briefs, customer inventories or copied CIS benchmark content may be committed. Community contributions are made under Apache-2.0; no CLA is currently required.
