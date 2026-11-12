@@ -8,7 +8,7 @@
 
 [Product page](https://byte2craft.com/nixfence/) · [Quickstart](docs/QUICKSTART.md) · [Host preparation](docs/HOST_PREPARATION.md) · [Security limitations](docs/STATUS.md) · [Docker Hub publishing](docs/DOCKERHUB.md)
 
-**v0.2.0-beta.1 / Community Early Access** · **Apache-2.0** · **Self-hosted**
+**v0.2.0-beta.2 / Community Early Access** · **Apache-2.0** · **Self-hosted**
 
 </div>
 
@@ -26,9 +26,14 @@
 - **Authentication and history:** Single-admin login, server-side sessions, HTTP-only cookies, CSRF, login throttling, SQLite audit records.
 - **Offline policy analyzer:** JSON policy validation remains separate from live deployment; analyzer results never trigger SSH commands.
 
-## Fast local installation (Docker)
+## Install from Docker Hub (prebuilt image, no local build)
 
-1. Clone the repository and generate credentials:
+**This image must be published on Docker Hub before the pull command works.**
+The release pipeline refuses to publish if Docker Scout detects **any known CVE**.
+A clean scan does not establish production readiness: test SSH, sudo and independent
+host rollback on disposable Rocky/Alma/RHEL 9 VMs.
+
+1. Download the deployment configuration and generate credentials:
 
 ```bash
 git clone https://github.com/Byte2Craft/NixFence.git
@@ -36,24 +41,51 @@ cd NixFence
 python scripts/bootstrap.py
 ```
 
-2. Set up a dedicated host SSH user and **independently verify** the host's SSH public key before adding it to `secrets/known_hosts`. Ensure the `secrets/` directory and mounted files are readable by container GID `10001` but not world-readable. [Full preparation](docs/HOST_PREPARATION.md).
+On Windows CMD, use `py scripts\bootstrap.py` if necessary.
 
-3. Build locally for evaluation (does not require Docker Hub):
+2. Follow [host preparation](docs/HOST_PREPARATION.md): configure a dedicated
+SSH account, independently verify the host key and populate `secrets/known_hosts`.
+Protect the generated admin password and private SSH key; do not commit `secrets/`.
+
+3. Pull the verified image and launch the supplied Docker Compose configuration:
+
+```bash
+docker pull byte2craft/nixfence-community:0.2.0-beta.2
+docker compose up -d --no-build
+```
+
+The UI is reachable at **http://127.0.0.1:8080** on the Docker host.
+Log in as `admin` with the bootstrap password and enroll a real Linux host.
+The default configuration binds the service to loopback only and retains
+SQLite data in the named volume `nixfence_data`.
+
+4. Check health and stop when needed:
+
+```bash
+docker compose ps
+docker compose logs --tail=50 nixfence
+docker compose down
+```
+
+[Docker Hub repository](https://hub.docker.com/r/byte2craft/nixfence-community)
+| [Release and security gate](docs/DOCKERHUB.md)
+
+### Build from source (developers)
+
+To test a local build before Docker Hub publication:
+
+```bash
+docker build --pull --no-cache -t nixfence-community:security-candidate .
+docker scout cves --exit-code nixfence-community:security-candidate
+```
+
+If the scan passes, start a local evaluation build with:
 
 ```bash
 docker compose -f compose.yaml -f compose.build.yaml up -d --build
 ```
 
-Open **http://127.0.0.1:8080** on the Docker machine, sign in as `admin` with the bootstrap password, then enroll a real host. The host inventory is empty until you enroll and verify one.
-
-4. **Once the image has been published** to Docker Hub, deploy without building:
-
-```bash
-docker compose pull
-docker compose up -d
-```
-
-Pulls: `byte2craft/nixfence-community:0.2.0-beta.1`. This tag does **not** exist merely because the package was prepared; the project publisher must push it first using the provided [GitHub Actions workflow](docs/DOCKERHUB.md).
+Do **not** publish a build which Docker Scout reports as vulnerable.
 
 ## Security boundaries and limitations
 

@@ -1,6 +1,6 @@
 services:
   nixfence:
-    image: byte2craft/nixfence-community:0.2.0-beta.1
+    image: byte2craft/nixfence-community:0.2.0-beta.2
     container_name: nixfence-community
     restart: unless-stopped
     ports:

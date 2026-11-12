@@ -27,22 +27,24 @@ Collect the public host key through an independent channel, compare its fingerpr
 
 Install `secrets/id_ed25519.pub` in the target dedicated SSH user's `authorized_keys`. Verify the account can perform the necessary sudo commands non-interactively.
 
-## 3. Build and start locally (works before Docker Hub publication)
+## 3. Pull the published image (no local build)
 
 ```bash
-docker compose -f compose.yaml -f compose.build.yaml up -d --build
+docker pull byte2craft/nixfence-community:0.2.0-beta.2
+docker compose up -d --no-build
 ```
 
 Open **http://127.0.0.1:8080** on the Docker host. Sign in with `admin` and the generated password. Add a real Linux host and inspect its firewalld/SELinux state. The web UI does not have synthetic host inventory.
 
-## 4. After the tested Docker Hub release exists
+## 4. Before Docker Hub publication: local build and strict scan
 
 ```bash
-docker compose pull
-docker compose up -d
+docker build --pull --no-cache -t nixfence-community:security-candidate .
+docker scout cves --exit-code nixfence-community:security-candidate
+docker compose -f compose.yaml -f compose.build.yaml up -d --build
 ```
 
-The default image is `byte2craft/nixfence-community:0.2.0-beta.1`. This tag is only usable once the publisher has pushed it to Docker Hub. See [Docker Hub publishing](DOCKERHUB.md).
+The default image is `byte2craft/nixfence-community:0.2.0-beta.2` once published. Do not continue if the strict scan reports vulnerabilities. See [Docker Hub publishing](DOCKERHUB.md).
 
 ## 5. Backups and local access
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nixfence"
-version = "0.2.0b1"
+version = "0.2.0b2"
 description = "NixFence Community - verified SSH Linux firewall and SELinux operations (early beta)"
 readme = "README.md"
 requires-python = ">=3.11"

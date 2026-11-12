@@ -1,4 +1,4 @@
-# NixFence Community v0.2.0-beta.1 — Verified implementation status
+# NixFence Community v0.2.0-beta.2 — Verified implementation status
 
 This is **real host operations code**, not a simulated demo. It has not yet passed real Rocky/Alma/RHEL VM failure-injection tests or an independent security review and is therefore **not production-ready**.
 
@@ -27,3 +27,10 @@ This is **real host operations code**, not a simulated demo. It has not yet pass
 ## Safety claim limitation
 
 The systemd-run timer is designed to run even after SSH drops. This property still needs to be tested on supported real VMs. It cannot protect against a stopped systemd manager, OS crash, firewalld daemon failure, policy conflicts or malicious host administrators. Never disable host key verification or publish the unaudited control plane on an internet-facing port.
+
+## Image vulnerability policy
+
+The candidate container uses Alpine 3.24, no Kerberos OpenSSH client and no runtime pip.
+The release workflow blocks publication if Docker Scout reports any known CVE.
+This has **not** yet been validated by a Docker build and Scout scan in this environment.
+Do not equate a scanner pass with VM rollback testing or independent application security review.
